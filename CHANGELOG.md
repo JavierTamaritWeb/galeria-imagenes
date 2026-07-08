@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.4] - 2026-07-08
+
+### Cambiado
+- El indicador de la cara seleccionada pasa de negro a **rojo coral**
+  (`#ff7f50`): el punto central del botón activo y el aro móvil
+  (`__moving-dot`) — borde, outline y sombra.
+
 ## [1.1.3] - 2026-07-08
 
 ### Cambiado
