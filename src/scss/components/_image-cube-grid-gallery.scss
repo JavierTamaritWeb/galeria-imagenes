@@ -83,7 +83,8 @@
     $self: &;
 
     // Tiempos compartidos por herencia entre __cube y __navigation, para que
-    // el punto móvil dure exactamente lo mismo que el barrido de la onda.
+    // el aro activo (__active-indicator) dure exactamente lo mismo que el
+    // barrido de la onda.
     --_cube-transition-duration: 1200ms;
     --_wave-delay: 90ms;
     --_wave-max: #{v.$wave-max};
@@ -180,7 +181,7 @@
 
     // -----------------------------------------------------------------------
     // Estado según el botón seleccionado: rotación del conjunto, animación de
-    // empuje en Z al cambiar de cara y posición del punto móvil.
+    // empuje en Z al cambiar de cara y posición del aro activo.
     //
     // Se usan 6 keyframes idénticos (cube-z-push-N) porque cambiar el
     // animation-name es lo que reinicia la animación en cada cambio de cara.
@@ -202,10 +203,12 @@
     }
 
     // -----------------------------------------------------------------------
-    // Elemento: moving-dot
+    // Elemento: active-indicator
+    // Aro que rodea el botón de la cara activa y se desplaza entre botones
+    // al cambiar de cara (no es un punto relleno, solo borde/outline).
     // -----------------------------------------------------------------------
 
-    &__moving-dot {
+    &__active-indicator {
         position: absolute;
 
         width: var(--_button-size);

@@ -4,6 +4,16 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.6] - 2026-07-08
+
+### Cambiado
+- Renombrado el elemento BEM `__moving-dot` a `__active-indicator`: nunca
+  fue un punto relleno (no tiene `background-color`, solo `border` +
+  `outline`), es un aro que rodea el botón de la cara activa y se
+  desplaza al cambiar de cara. El nuevo nombre describe su función en vez
+  de una forma que no tiene. Actualizado en `src/index.html`,
+  `_image-cube-grid-gallery.scss` y el comentario de `_variables.scss`.
+
 ## [1.1.5] - 2026-07-08
 
 ### Cambiado

@@ -19,7 +19,7 @@ $wave-max: math.div($grid-cols - 1, 2) + math.div($grid-rows - 1, 2);
 // larga, sin anticipación ni rebote — movimiento fluido y sin sacudidas.
 $cube-easing: cubic-bezier(.45, 0, .15, 1);
 
-// Easing del aro de navegación (__moving-dot): arranque decidido y un
+// Easing del aro de navegación (__active-indicator): arranque decidido y un
 // asentamiento final muy suave (quint ease-out), sin la simetría del
 // ease-in-out por defecto — se percibe más ágil al salir y más elegante
 // al llegar a la cara seleccionada.
