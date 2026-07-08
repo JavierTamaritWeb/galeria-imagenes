@@ -4,6 +4,19 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.8] - 2026-07-08
+
+### Añadido
+- Suite de tests con el test runner nativo de Node (`node --test`, sin
+  dependencias nuevas): `test/source-rules.test.js` (estático, sobre `src/`
+  y `gulpfile.js`, codifica las reglas del "Registro de problemas
+  resueltos" de `CLAUDE.md`) y `test/build-output.test.js` (sobre `dist/`,
+  build automático vía el hook `pretest`).
+- Script `npm test` (con `pretest` → `npm run build`).
+
+### Cambiado
+- `CLAUDE.md` y `README.md` documentan la suite de tests y cómo ejecutarla.
+
 ## [1.1.7] - 2026-07-08
 
 ### Cambiado

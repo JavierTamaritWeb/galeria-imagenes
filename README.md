@@ -34,6 +34,14 @@ BrowserSync sirve `dist/` con watch y live reload.
 | `npm run dev` | Build + servidor de desarrollo con watch y live reload |
 | `npm run build` | Build de producción en `dist/` (limpia, compila SCSS comprimido con sourcemaps y copia el HTML) |
 | `npm run clean` | Elimina `dist/` |
+| `npm test` | Build + tests (`node --test`, sin dependencias nuevas) |
+
+## 🧪 Tests
+
+Suite ligera con el test runner nativo de Node — sin frameworks ni dependencias nuevas:
+
+- **`test/source-rules.test.js`** — estático sobre `src/`/`gulpfile.js`, no necesita build: invariantes estructurales (6 caras, `$cube-count` = nº de cubos en el HTML, `@property` registradas, colores solo en `_variables.scss`) y las reglas históricas del `CLAUDE.md`.
+- **`test/build-output.test.js`** — sobre `dist/`, requiere build (automático vía el hook `pretest`): CSS minificado, las 3 variantes de imagen por cara presentes, `dist/index.html` idéntico al de `src/`.
 
 ## 📁 Estructura
 

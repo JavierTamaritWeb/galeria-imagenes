@@ -12,9 +12,16 @@ Galería de imágenes CSS-only: una cuadrícula de 64 cubos 3D rotatorios, sin J
 npm run dev     # build + BrowserSync en dist/ con watch y live reload
 npm run build   # build limpio a dist/ (clean + styles + markup)
 npm run clean   # elimina dist/
+npm test        # build (hook pretest) + node --test: valida src/ y dist/
 ```
 
-No hay tests ni linter. Para verificar un cambio: `npm run build` debe compilar sin errores de Sass, y comprobar el resultado en el navegador servido por `npm run dev`.
+No hay linter. Hay una suite de tests con el test runner nativo de Node (`node --test`, sin dependencias nuevas) en `test/`:
+- `test/source-rules.test.js` — estático, sobre `src/` y `gulpfile.js`: no necesita build. Codifica como aserciones las reglas del "Registro de problemas resueltos" de abajo (p. ej. que la tarea `images` use `encoding: false`, que `$face-rotations` traiga los signos correctos, que `$cube-count` coincida con los `<div>` del HTML) más invariantes estructurales (6 caras, `@property` registradas, sin `<picture>`, colores solo en `_variables.scss`).
+- `test/build-output.test.js` — sobre `dist/`, requiere build fresco (el hook `pretest` en `package.json` ya ejecuta `npm run build` antes de `npm test`). Verifica que el CSS salga minificado, que existan las 3 variantes de imagen por cara y que `dist/index.html` sea copia exacta del `src/`.
+
+**Al arreglar un bug o fijar una regla nueva en el Registro de problemas resueltos, añade también (o actualiza) el test que la cubre** — el registro documenta la regla en prosa, el test la hace fallar si vuelve a romperse.
+
+Para verificar un cambio: `npm test` debe pasar en verde, y comprobar el resultado en el navegador servido por `npm run dev`.
 
 ## Stack y arquitectura
 
