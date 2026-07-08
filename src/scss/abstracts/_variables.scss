@@ -49,10 +49,8 @@ $face-rotations: (
 // (.avif, .webp, .jpg) y el componente los sirve con CSS image-set() para
 // que el navegador elija el mejor que soporte (AVIF → WebP → JPG). Es el
 // equivalente de <picture> para imágenes de fondo. Ver $face-formats y el
-// @each de _image-cube-grid-gallery.scss.
-// OJO: estas imágenes están duplicadas en los <link rel="preload"> de
-// src/index.html (allí sin ../ y con la extensión .avif) — si se cambian,
-// actualizar los dos sitios.
+// @each de _image-cube-grid-gallery.scss. Es la única fuente de estas
+// rutas: el componente es autocontenido y no las duplica en el HTML.
 $face-images: (
     1: '../img/face-1',
     2: '../img/face-2',
@@ -92,3 +90,11 @@ $button-face: (
     5: 1,   // arriba
     6: 6,   // abajo
 );
+
+// Colores base, en hexadecimal: el componente varía su opacidad en cada
+// sitio con color.change($color, $alpha: ...) en vez de duplicar el valor.
+// $color-accent es el color de "cara seleccionada" (punto del botón activo
+// y aro __active-indicator) — cambiar solo aquí.
+$color-white:  #fff;
+$color-black:  #000;
+$color-accent: #ff7f50; // coral

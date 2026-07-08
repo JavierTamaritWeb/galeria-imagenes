@@ -4,6 +4,17 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.7] - 2026-07-08
+
+### Cambiado
+- Colores centralizados en `_variables.scss` (`$color-white`, `$color-black`,
+  `$color-accent`), en hexadecimal, en vez de repetidos como literales en el
+  componente (el coral estaba duplicado 4 veces). Las variantes con
+  transparencia usan `color.change($color, $alpha: ...)` de `sass:color` en
+  vez de duplicar el valor.
+- Corregido un comentario obsoleto en `_variables.scss` que aún mencionaba
+  los `<link rel="preload">` eliminados en v1.1.3.
+
 ## [1.1.6] - 2026-07-08
 
 ### Cambiado
