@@ -364,25 +364,6 @@
     }
 
     // -----------------------------------------------------------------------
-    // Elemento: info
-    // -----------------------------------------------------------------------
-
-    &__info {
-        position: absolute;
-        left: 0;
-        top: 1.6rem;
-        width: 100%;
-        padding: 0 2rem;
-        font: 1.4rem/1.5 system-ui, sans-serif;
-        text-align: center;
-        z-index: 1;
-
-        a {
-            color: inherit;
-        }
-    }
-
-    // -----------------------------------------------------------------------
     // Elemento: unsupported (aviso para navegadores sin soporte)
     // -----------------------------------------------------------------------
 
@@ -513,7 +494,6 @@
     (width: calc(abs(-1) * 1px))
 ) {
     .image-cube-grid-gallery {
-        &__info,
         &__navigation,
         &__viewport {
             display: none;
