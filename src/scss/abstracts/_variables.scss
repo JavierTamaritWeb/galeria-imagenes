@@ -1,0 +1,73 @@
+// ---------------------------------------------------------------------------
+// Variables globales del proyecto
+// ---------------------------------------------------------------------------
+
+@use 'sass:math';
+
+// Número de cubos en el viewport (debe coincidir con los nodos del HTML).
+$cube-count: 64;
+
+// La rotación se propaga como una onda radial desde el centro de la
+// cuadrícula (retardo por distancia Manhattan al centro). Onda máxima:
+// (cols - 1)/2 + (rows - 1)/2. Se usa para que la transición del punto
+// móvil de la navegación dure lo mismo que el barrido completo.
+$grid-cols: math.ceil(math.sqrt($cube-count));
+$grid-rows: math.ceil(math.div($cube-count, $grid-cols));
+$wave-max: math.div($grid-cols - 1, 2) + math.div($grid-rows - 1, 2);
+
+// Easing de la rotación de los cubos: arranque suave y desaceleración muy
+// larga, sin anticipación ni rebote — movimiento fluido y sin sacudidas.
+$cube-easing: cubic-bezier(.45, 0, .15, 1);
+
+// Rotación del conjunto de cubos para cada botón de navegación
+// (1: frente, 2: derecha, 3: atrás, 4: izquierda, 5: arriba, 6: abajo).
+// Signos: rotateX positivo inclina la parte superior hacia atrás, así que
+// para VER la cara superior hace falta rx negativo (y viceversa). Cada
+// entrada debe traer al frente la cara que $button-face le asigna.
+$face-rotations: (
+    1: (rx: 0deg,   ry: 0deg),
+    2: (rx: 0deg,   ry: -90deg),
+    3: (rx: 0deg,   ry: 180deg),
+    4: (rx: 0deg,   ry: 90deg),
+    5: (rx: -90deg, ry: 0deg),
+    6: (rx: 90deg,  ry: 0deg),
+);
+
+// Cada cara del cubo usa UNA sola imagen grande que se reparte entre los
+// 64 cubos como un "sprite sheet" (vía background-size/position).
+// Sustitúyelas por imágenes propias, idealmente cuadradas (600x600 o más).
+// Las rutas son relativas al CSS compilado (dist/css/main.css), por eso el
+// ../ — los archivos viven en src/img/ y Gulp los copia a dist/img/.
+// OJO: estas imágenes están duplicadas en los <link rel="preload"> de
+// src/index.html (allí sin ../) — si se cambian, actualizar los dos sitios.
+$face-images: (
+    1: '../img/face-1.jpg',
+    2: '../img/face-2.jpg',
+    3: '../img/face-3.jpg',
+    4: '../img/face-4.jpg',
+    5: '../img/face-5.jpg',
+    6: '../img/face-6.jpg',
+);
+
+// Rotación previa de cada cara del cubo antes de extruirla con translateZ
+// (null = cara frontal, sin rotación).
+$face-transforms: (
+    1: rotateX(90deg),
+    2: null,
+    3: rotateY(90deg),
+    4: rotateY(180deg),
+    5: rotateY(-90deg),
+    6: rotateX(-90deg),
+);
+
+// Botón de navegación → cara del cubo (nth-child) que muestra su imagen.
+// Derivado de $face-rotations + $face-transforms; se usa en el modo
+// prefers-reduced-motion para hacer crossfade entre caras planas.
+$button-face: (
+    1: 2,   // frente
+    2: 3,   // derecha
+    3: 4,   // atrás
+    4: 5,   // izquierda
+    5: 1,   // arriba
+    6: 6,   // abajo
+);

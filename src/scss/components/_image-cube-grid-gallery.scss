@@ -1,0 +1,492 @@
+// ---------------------------------------------------------------------------
+// Componente: image-cube-grid-gallery (bloque BEM)
+//
+// Galería CSS-only de cubos 3D en una cuadrícula calculada dinámicamente con
+// sibling-index()/sibling-count() y funciones matemáticas modernas de CSS.
+// ---------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '../abstracts/variables' as v;
+
+// ---------------------------------------------------------------------------
+// Propiedades personalizadas registradas.
+// El registro con sintaxis tipada es imprescindible para poder transicionar
+// y animar estas variables (transition-property / @keyframes sobre ellas).
+// ---------------------------------------------------------------------------
+
+@property --_cols {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --_rows {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --_x {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --_y {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --_rx {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --_ry {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --_tz {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --_intro-ry {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --_intro-tz {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --_nav-index {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Bloque
+// ---------------------------------------------------------------------------
+
+.image-cube-grid-gallery {
+    $self: &;
+
+    // Tiempos compartidos por herencia entre __cube y __navigation, para que
+    // el punto móvil dure exactamente lo mismo que el barrido de la onda.
+    --_cube-transition-duration: 1200ms;
+    --_wave-delay: 90ms;
+    --_wave-max: #{v.$wave-max};
+
+    // -----------------------------------------------------------------------
+    // Elemento: navigation
+    // -----------------------------------------------------------------------
+
+    &__navigation {
+        --_button-size: 2.2rem;
+        --_dot-size: calc(var(--_button-size) * .5);
+        --_dot-gap: .6rem;
+
+        position: absolute;
+        left: 50%;
+        bottom: 3.2rem;
+        translate: -50% 0;
+
+        display: flex;
+        gap: var(--_dot-gap);
+
+        z-index: 2;
+
+        // Duración de la rotación + el barrido completo de la onda diagonal.
+        --_dot-total-transition-duration: calc(var(--_cube-transition-duration) + (var(--_wave-max) * var(--_wave-delay)));
+
+        transition-property: --_nav-index;
+        transition-duration: var(--_dot-total-transition-duration);
+        transition-timing-function: ease-in-out;
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: button
+    // -----------------------------------------------------------------------
+
+    &__button {
+        position: relative;
+
+        width: var(--_button-size);
+        aspect-ratio: 1;
+
+        display: grid;
+        place-items: center;
+
+        border: .1rem solid #fff;
+        border-radius: var(--_button-size);
+
+        background-color: rgb(255 255 255 / 44%);
+        backdrop-filter: blur(.5rem);
+
+        &::after {
+            content: '';
+
+            width: var(--_dot-size);
+            aspect-ratio: 1;
+
+            border-radius: inherit;
+            background-color: rgb(0 0 0 / 0%);
+
+            scale: .25;
+
+            pointer-events: none;
+
+            transition:
+                background-color .25s ease-in-out,
+                scale .25s ease-in-out;
+
+            will-change: background-color, scale;
+        }
+
+        &:has(input:checked)::after {
+            background-color: rgb(0 0 0 / 100%);
+            scale: 1;
+        }
+
+        input {
+            appearance: none;
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            cursor: pointer;
+
+            &:checked {
+                cursor: initial;
+            }
+
+            &:focus-visible {
+                outline: .2rem solid rgb(0 0 0 / 100%);
+                outline-offset: .2rem;
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Estado según el botón seleccionado: rotación del conjunto, animación de
+    // empuje en Z al cambiar de cara y posición del punto móvil.
+    //
+    // Se usan 6 keyframes idénticos (cube-z-push-N) porque cambiar el
+    // animation-name es lo que reinicia la animación en cada cambio de cara.
+    // -----------------------------------------------------------------------
+
+    @each $index, $rotation in v.$face-rotations {
+        &:has(#{$self}__navigation #{$self}__button:nth-child(#{$index}) input:checked) {
+            --_rx: #{map.get($rotation, rx)};
+            --_ry: #{map.get($rotation, ry)};
+        }
+
+        &:has(#{$self}__navigation:focus-within #{$self}__button:nth-child(#{$index}) input:checked) #{$self}__cube {
+            animation-name: cube-z-push-#{$index}-animation;
+        }
+
+        &__navigation:has(#{$self}__button:nth-child(#{$index}) input:checked) {
+            --_nav-index: #{$index - 1};
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: moving-dot
+    // -----------------------------------------------------------------------
+
+    &__moving-dot {
+        position: absolute;
+
+        width: var(--_button-size);
+        aspect-ratio: 1;
+
+        border-radius: 50%;
+        border: .1rem solid rgb(0 0 0 / 100%);
+        outline: .1rem solid rgb(0 0 0 / 100%);
+        box-shadow: 0 0 .4rem .2rem rgb(0 0 0 / 25%);
+
+        pointer-events: none;
+
+        top: 50%;
+        left: 0;
+
+        translate:
+            calc(var(--_nav-index) * (var(--_button-size) + var(--_dot-gap)))
+            -50%;
+
+        will-change: translate;
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: viewport
+    // -----------------------------------------------------------------------
+
+    &__viewport {
+        perspective: 80rem;
+        position: relative;
+        transform-style: preserve-3d;
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: cube
+    // -----------------------------------------------------------------------
+
+    &__cube {
+        // Tamaño fluido: escala de forma continua con el lado más corto del
+        // viewport (cuadrícula de 8 columnas + margen para la perspectiva).
+        --_size: clamp(3.2rem, calc(min(100dvw, 100dvh) / 10), 7.5rem);
+        --_gap: 0rem;
+        --_step: calc(var(--_size) + var(--_gap));
+
+        --_z-push-factor: -5;
+        --_z-base: calc(var(--_size) * -.5);
+        --_z-push: calc(var(--_z-base) * var(--_z-push-factor) * -1);
+
+        --_i: calc(sibling-index() - 1);
+        --_l: sibling-count();
+
+        --_cols: round(up, sqrt(var(--_l)), 1);
+        --_rows: round(up, calc(var(--_l) / var(--_cols)), 1);
+
+        --_x: mod(var(--_i), var(--_cols));
+        --_y: round(down, calc(var(--_i) / var(--_cols)), 1);
+
+        --_cx: calc((var(--_cols) - 1) * .5);
+        --_cy: calc((var(--_rows) - 1) * .5);
+
+        // Onda radial: el retardo depende de la distancia Manhattan al
+        // centro, así la rotación florece desde el centro hacia los bordes
+        // de forma simétrica.
+        --_wave: calc(abs(var(--_x) - var(--_cx)) + abs(var(--_y) - var(--_cy)));
+        --_wave-current-delay: calc(var(--_wave) * var(--_wave-delay));
+
+        position: absolute;
+
+        width: var(--_size);
+        height: var(--_size);
+
+        transform-style: inherit;
+        transform:
+            translate(-50%, -50%)
+            translate3d(
+                calc((var(--_x) - var(--_cx)) * var(--_step)),
+                calc((var(--_y) - var(--_cy)) * var(--_step)),
+                calc(var(--_z-base) + var(--_tz) + var(--_intro-tz))
+            )
+            rotateY(var(--_intro-ry, 0deg))
+            rotateX(var(--_rx, 0deg))
+            rotateY(var(--_ry, 0deg));
+
+        transition-property:
+            --_rx,
+            --_ry;
+
+        transition-duration: var(--_cube-transition-duration);
+        transition-timing-function: #{v.$cube-easing};
+        transition-delay: var(--_wave-current-delay);
+
+        will-change: --_rx, --_ry;
+
+        animation-duration: var(--_cube-transition-duration);
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: both;
+        animation-delay: var(--_wave-current-delay);
+
+        // Caras del cubo
+        > span {
+            --_translate-z: calc(var(--_size) * .5);
+
+            position: absolute;
+            inset: 0;
+            display: block;
+
+            width: var(--_size);
+            height: var(--_size);
+
+            background-repeat: no-repeat;
+            background-size:
+                calc(var(--_cols) * var(--_size))
+                calc(var(--_rows) * var(--_size));
+            background-position:
+                calc(var(--_x) * var(--_size) * -1)
+                calc(var(--_y) * var(--_size) * -1);
+        }
+
+        @each $index, $image in v.$face-images {
+            > span:nth-child(#{$index}) {
+                background-image: url('#{$image}');
+                transform:
+                    #{map.get(v.$face-transforms, $index)}
+                    translateZ(var(--_translate-z));
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Modificador: intro
+    // Elimina la clase `image-cube-grid-gallery--intro` del HTML para
+    // desactivar la animación de entrada.
+    // -----------------------------------------------------------------------
+
+    &--intro {
+        #{$self}__cube {
+            animation-name: image-cube-grid-gallery-intro-animation;
+        }
+
+        @each $index, $rotation in v.$face-rotations {
+            &:has(#{$self}__navigation:focus-within #{$self}__button:nth-child(#{$index}) input:checked) #{$self}__cube {
+                animation-name:
+                    image-cube-grid-gallery-intro-animation,
+                    cube-z-push-#{$index}-animation;
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: info
+    // -----------------------------------------------------------------------
+
+    &__info {
+        position: absolute;
+        left: 0;
+        top: 1.6rem;
+        width: 100%;
+        padding: 0 2rem;
+        font: 1.4rem/1.5 system-ui, sans-serif;
+        text-align: center;
+        z-index: 1;
+
+        a {
+            color: inherit;
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Elemento: unsupported (aviso para navegadores sin soporte)
+    // -----------------------------------------------------------------------
+
+    &__unsupported {
+        display: none;
+    }
+
+    // -----------------------------------------------------------------------
+    // Movimiento reducido: sin rotación 3D ni intro; el cambio de cara es un
+    // crossfade entre caras planas. El sprite por cubo sigue funcionando.
+    // Va al final del bloque para ganar en cascada a las reglas anteriores
+    // de igual especificidad.
+    // -----------------------------------------------------------------------
+
+    @media (prefers-reduced-motion: reduce) {
+        &__navigation {
+            transition-duration: .25s;
+        }
+
+        &__cube {
+            transition: none;
+
+            // Duración 0: los keyframes (intro, z-push) saltan a su estado
+            // final sin movimiento. Sus variables ya no afectan al transform.
+            animation-duration: 0s;
+            animation-delay: 0s;
+
+            // Solo la colocación en la cuadrícula, sin rotaciones ni empuje Z.
+            transform:
+                translate(-50%, -50%)
+                translate3d(
+                    calc((var(--_x) - var(--_cx)) * var(--_step)),
+                    calc((var(--_y) - var(--_cy)) * var(--_step)),
+                    0
+                );
+
+            // :nth-child(n) matchea todas las caras con la misma
+            // especificidad que los :nth-child(N) que asignan el transform
+            // 3D por cara; al ir después en la cascada, lo anula.
+            > span:nth-child(n) {
+                transform: none;
+                opacity: 0;
+                transition: opacity .4s ease-in-out;
+                will-change: opacity;
+            }
+        }
+
+        @each $button, $face in v.$button-face {
+            &:has(#{$self}__navigation #{$self}__button:nth-child(#{$button}) input:checked) #{$self}__cube > span:nth-child(#{$face}) {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Keyframes
+// ---------------------------------------------------------------------------
+
+@for $index from 1 through 6 {
+    @keyframes cube-z-push-#{$index}-animation {
+        0%, 100% {
+            --_tz: 0px;
+        }
+
+        50% {
+            --_tz: var(--_z-push);
+        }
+    }
+}
+
+@keyframes image-cube-grid-gallery-intro-animation {
+    0% {
+        --_intro-ry: -90deg;
+        --_intro-tz: 0px;
+    }
+
+    50% {
+        --_intro-ry: -45deg;
+        --_intro-tz: var(--_z-push);
+    }
+
+    100% {
+        --_intro-ry: 0deg;
+        --_intro-tz: 0px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Comprobación de soporte: si el navegador no soporta las funciones CSS
+// modernas requeridas se oculta la galería y se muestra el aviso.
+// ---------------------------------------------------------------------------
+
+@supports not (
+    (width: calc(sibling-index() * 1px)) and
+    (width: calc(sibling-count() * 1px)) and
+    (width: calc(sqrt(4) * 1px)) and
+    (width: round(up, 1.5px, 1px)) and
+    (width: round(down, 1.5px, 1px)) and
+    (width: mod(10px, 3px)) and
+    (width: calc(abs(-1) * 1px))
+) {
+    .image-cube-grid-gallery {
+        &__info,
+        &__navigation,
+        &__viewport {
+            display: none;
+        }
+
+        &__unsupported {
+            display: block;
+            max-width: 57.6rem;
+            padding: 1.6rem 2rem;
+            font: 1.4rem/1.5 system-ui, sans-serif;
+            text-align: center;
+            background-color: rgb(255 255 255 / 70%);
+        }
+    }
+}

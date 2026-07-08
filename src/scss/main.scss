@@ -1,0 +1,8 @@
+// ---------------------------------------------------------------------------
+// Punto de entrada de estilos
+// Arquitectura 7-1 simplificada: abstracts / base / components
+// ---------------------------------------------------------------------------
+
+@use 'base/reset';
+@use 'base/global';
+@use 'components/image-cube-grid-gallery';
