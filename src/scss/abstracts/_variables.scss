@@ -38,15 +38,30 @@ $face-rotations: (
 // Sustitúyelas por imágenes propias, idealmente cuadradas (600x600 o más).
 // Las rutas son relativas al CSS compilado (dist/css/main.css), por eso el
 // ../ — los archivos viven en src/img/ y Gulp los copia a dist/img/.
+//
+// Son rutas BASE, sin extensión: de cada cara existen tres formatos
+// (.avif, .webp, .jpg) y el componente los sirve con CSS image-set() para
+// que el navegador elija el mejor que soporte (AVIF → WebP → JPG). Es el
+// equivalente de <picture> para imágenes de fondo. Ver $face-formats y el
+// @each de _image-cube-grid-gallery.scss.
 // OJO: estas imágenes están duplicadas en los <link rel="preload"> de
-// src/index.html (allí sin ../) — si se cambian, actualizar los dos sitios.
+// src/index.html (allí sin ../ y con la extensión .avif) — si se cambian,
+// actualizar los dos sitios.
 $face-images: (
-    1: '../img/face-1.jpg',
-    2: '../img/face-2.jpg',
-    3: '../img/face-3.jpg',
-    4: '../img/face-4.jpg',
-    5: '../img/face-5.jpg',
-    6: '../img/face-6.jpg',
+    1: '../img/face-1',
+    2: '../img/face-2',
+    3: '../img/face-3',
+    4: '../img/face-4',
+    5: '../img/face-5',
+    6: '../img/face-6',
+);
+
+// Formatos por cara, en orden de preferencia (el primero que soporte el
+// navegador gana). El MIME es el que espera type() dentro de image-set().
+$face-formats: (
+    'avif': 'image/avif',
+    'webp': 'image/webp',
+    'jpg':  'image/jpeg',
 );
 
 // Rotación previa de cada cara del cubo antes de extruirla con translateZ

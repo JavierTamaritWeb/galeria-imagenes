@@ -31,7 +31,10 @@ export function clean() {
 
 export function styles() {
   return src(paths.styles.entry, { sourcemaps: true })
-    .pipe(sass.sync({ outputStyle: 'compressed' }).on('error', sass.logError))
+    // gulp-sass 6 usa la API moderna de Dart Sass (compileString): la opción
+    // es `style`, no `outputStyle` (el nombre legacy se ignora en silencio y
+    // el CSS sale sin comprimir).
+    .pipe(sass.sync({ style: 'compressed' }).on('error', sass.logError))
     .pipe(dest(paths.styles.dest, { sourcemaps: '.' }))
     .pipe(browserSync.stream({ match: '**/*.css' }));
 }

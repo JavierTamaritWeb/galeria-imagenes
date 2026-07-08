@@ -5,6 +5,7 @@
 // sibling-index()/sibling-count() y funciones matemáticas modernas de CSS.
 // ---------------------------------------------------------------------------
 
+@use 'sass:list';
 @use 'sass:map';
 @use '../abstracts/variables' as v;
 
@@ -323,7 +324,18 @@
 
         @each $index, $image in v.$face-images {
             > span:nth-child(#{$index}) {
-                background-image: url('#{$image}');
+                // image-set() = <picture> para fondos: el navegador toma el
+                // primer formato que soporta (AVIF → WebP → JPG). $image es
+                // la ruta base sin extensión; ver $face-formats.
+                $sources: ();
+                @each $ext, $mime in v.$face-formats {
+                    $sources: list.append(
+                        $sources,
+                        url('#{$image}.#{$ext}') type('#{$mime}'),
+                        comma
+                    );
+                }
+                background-image: image-set(#{$sources});
                 transform:
                     #{map.get(v.$face-transforms, $index)}
                     translateZ(var(--_translate-z));
@@ -422,6 +434,33 @@
             &:has(#{$self}__navigation #{$self}__button:nth-child(#{$button}) input:checked) #{$self}__cube > span:nth-child(#{$face}) {
                 opacity: 1;
             }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Móvil (< 769px): pegar la navegación justo debajo de la cuadrícula.
+    //
+    // Por defecto la navegación va anclada al fondo de la pantalla
+    // (bottom: 3.2rem), pero la cuadrícula está centrada en 50dvh; al
+    // encoger los cubos en pantallas estrechas queda un hueco grande entre
+    // las imágenes y los puntos. Aquí se recoloca su borde superior en el
+    // borde inferior de la cuadrícula + un margen pequeño.
+    //
+    // Borde inferior de la cuadrícula = 50dvh + (filas / 2) * tamaño-de-cubo.
+    // El tamaño-de-cubo es el mismo clamp() de __cube (aquí no se hereda
+    // porque se define dentro de __cube; se repite a propósito). Va al final
+    // del bloque para ganar en cascada al bottom del estado base.
+    // -----------------------------------------------------------------------
+
+    @media (max-width: 768px) {
+        &__navigation {
+            top: calc(
+                50dvh
+                + #{v.$grid-rows} * .5
+                    * clamp(3.2rem, min(100dvw, 100dvh) / 10, 7.5rem)
+                + 2rem
+            );
+            bottom: auto;
         }
     }
 }

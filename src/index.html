@@ -9,14 +9,17 @@
 
     <!-- Precarga de las imágenes de las 6 caras: evita cubos vacíos la
          primera vez que se rota a una cara. Deben coincidir con el mapa
-         $face-images de src/scss/abstracts/_variables.scss (allí con ../,
-         porque las rutas son relativas al CSS compilado). -->
-    <link rel="preload" as="image" href="img/face-1.jpg">
-    <link rel="preload" as="image" href="img/face-2.jpg">
-    <link rel="preload" as="image" href="img/face-3.jpg">
-    <link rel="preload" as="image" href="img/face-4.jpg">
-    <link rel="preload" as="image" href="img/face-5.jpg">
-    <link rel="preload" as="image" href="img/face-6.jpg">
+         $face-images de src/scss/abstracts/_variables.scss (allí con ../ y
+         sin extensión, porque las rutas son relativas al CSS compilado y el
+         formato lo elige image-set()). Aquí se precarga solo el AVIF con su
+         type: los navegadores que no lo soporten se saltan el preload y
+         cargan el WebP/JPG por la vía normal de image-set(). -->
+    <link rel="preload" as="image" href="img/face-1.avif" type="image/avif">
+    <link rel="preload" as="image" href="img/face-2.avif" type="image/avif">
+    <link rel="preload" as="image" href="img/face-3.avif" type="image/avif">
+    <link rel="preload" as="image" href="img/face-4.avif" type="image/avif">
+    <link rel="preload" as="image" href="img/face-5.avif" type="image/avif">
+    <link rel="preload" as="image" href="img/face-6.avif" type="image/avif">
 </head>
 <body>
 

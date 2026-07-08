@@ -14,6 +14,7 @@
 - **Cero JavaScript** — la interactividad se resuelve con radio buttons ocultos y `:has()`; la geometría de la cuadrícula, con `sibling-index()`, `sibling-count()`, `sqrt()`, `round()` y `mod()`.
 - **Transición en onda radial** — la rotación florece desde el centro de la cuadrícula hacia los bordes (retardo por distancia Manhattan), con un easing de desaceleración larga y sin sacudidas.
 - **Sprite sheet por cara** — cada cara del conjunto usa una única imagen grande repartida entre los 64 cubos vía `background-size`/`background-position`, precargada con `<link rel="preload">`. Las imágenes se sirven en local (`src/img/`), sin dependencias de red en runtime.
+- **Formatos modernos con fallback** — cada cara se ofrece en AVIF, WebP y JPG, y CSS `image-set()` (el equivalente de `<picture>` para fondos) hace que el navegador cargue el primer formato que soporta: AVIF → WebP → JPG.
 - **Responsiva de verdad** — el tamaño de los cubos es fluido (`clamp()` sobre el lado más corto del viewport), sin breakpoints ni saltos.
 - **Accesible** — con `prefers-reduced-motion: reduce` el 3D desaparece y el cambio de imagen es un fundido suave; el foco de teclado siempre es visible (`:focus-visible`) y los controles llevan `aria-label`.
 - **Degradación elegante** — si el navegador no soporta las funciones CSS requeridas, un bloque `@supports` oculta la galería y muestra un aviso.
@@ -66,7 +67,8 @@ Todos los mandos están en `src/scss/abstracts/_variables.scss` y en las variabl
 
 | Ajuste | Dónde | Efecto |
 | --- | --- | --- |
-| `$face-images` | `_variables.scss` | Rutas de las 6 imágenes, en `src/img/` (idealmente cuadradas, 600×600 o más). ⚠️ Duplicadas en los `<link rel="preload">` de `src/index.html` — actualizar ambos sitios |
+| `$face-images` | `_variables.scss` | Rutas **base** (sin extensión) de las 6 caras, en `src/img/` (idealmente cuadradas, 600×600 o más). De cada una debe existir `.avif`, `.webp` y `.jpg`. ⚠️ Duplicadas en los `<link rel="preload">` de `src/index.html` (allí `.avif`) — actualizar ambos sitios |
+| `$face-formats` | `_variables.scss` | Formatos servidos por `image-set()`, en orden de preferencia (AVIF → WebP → JPG) |
 | `$cube-easing` | `_variables.scss` | Curva de easing de la rotación |
 | `$cube-count` | `_variables.scss` | Número de cubos — debe coincidir con los `<div>` del HTML |
 | `--_cube-transition-duration` | `_image-cube-grid-gallery.scss` | Duración de la rotación de cada cubo |
