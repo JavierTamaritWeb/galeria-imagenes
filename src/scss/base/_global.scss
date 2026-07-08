@@ -17,3 +17,19 @@ body {
     place-content: center;
     overflow: hidden;
 }
+
+// Oculta un elemento visualmente pero lo mantiene accesible para lectores de
+// pantalla (p. ej. el <h1> del documento). position: absolute lo saca del
+// flujo, así que no afecta al centrado ni a la geometría de la cuadrícula.
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

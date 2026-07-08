@@ -6,6 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- color-scheme: la página es de tema claro (fondo radial blanco→plata);
+         declararlo evita el flash inicial y ajusta controles/scrollbars nativos. -->
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="Galería de imágenes hecha solo con CSS: una cuadrícula de 64 cubos 3D que rotan, con la geometría calculada dinámicamente en CSS y sin JavaScript.">
+
     <title>Galería de Imágenes — Grid de Cubos 3D (CSS only)</title>
 
     <!-- Precarga de las imágenes de las 6 caras ANTES de la hoja de estilos:
@@ -31,7 +36,12 @@
 </head>
 <body>
 
-<div class="image-cube-grid-gallery image-cube-grid-gallery--intro">
+<main class="image-cube-grid-gallery image-cube-grid-gallery--intro">
+
+    <!-- Encabezado del documento: visualmente oculto (la página es una pieza
+         visual sin texto), pero presente para el outline, SEO y lectores de
+         pantalla. -->
+    <h1 class="visually-hidden">Galería de imágenes — cuadrícula de cubos 3D en CSS</h1>
 
     <p class="image-cube-grid-gallery__unsupported" role="status">
         Lo sentimos: tu navegador no soporta las funciones modernas de CSS que necesita este experimento. La cuadrícula de cubos se calcula dinámicamente con las funciones CSS de hermanos y matemáticas avanzadas como sqrt(), round() y mod(). Pruébalo en un navegador compatible con estas funciones.
@@ -115,7 +125,7 @@
         <div class="image-cube-grid-gallery__cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     </div>
 
-</div>
+</main>
 
 </body>
 </html>

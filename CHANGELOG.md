@@ -4,6 +4,21 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.2] - 2026-07-08
+
+### Añadido
+- Landmark `<main>` (antes un `<div>` genérico) y `<h1>` visualmente oculto
+  (utilidad `.visually-hidden`): dan región principal y encabezado/outline al
+  documento sin alterar el diseño sin texto.
+- `<meta name="description">` para buscadores y `<meta name="color-scheme"
+  content="light">` coherente con el fondo claro (evita el flash inicial y
+  ajusta controles/scrollbars nativos).
+
+### Notas
+- Auditoría de accesibilidad/HTML. Las caras del cubo se mantienen sin `alt`
+  a propósito: son fondos CSS decorativos (arte generativo), no imágenes con
+  valor informativo.
+
 ## [1.1.1] - 2026-07-08
 
 ### Cambiado
