@@ -13,7 +13,8 @@
 
 - **Cero JavaScript** — la interactividad se resuelve con radio buttons ocultos y `:has()`; la geometría de la cuadrícula, con `sibling-index()`, `sibling-count()`, `sqrt()`, `round()` y `mod()`.
 - **Transición en onda radial** — la rotación florece desde el centro de la cuadrícula hacia los bordes (retardo por distancia Manhattan), con un easing de desaceleración larga y sin sacudidas.
-- **Sprite sheet por cara** — cada cara del conjunto usa una única imagen grande repartida entre los 64 cubos vía `background-size`/`background-position`, precargada con `<link rel="preload">`. Las imágenes se sirven en local (`src/img/`), sin dependencias de red en runtime.
+- **Sprite sheet por cara** — cada cara del conjunto usa una única imagen grande repartida entre los 64 cubos vía `background-size`/`background-position`. Las imágenes se sirven en local (`src/img/`), sin dependencias de red en runtime.
+- **Componente autocontenido** — sin `<link rel="preload">` ni otros recursos en el `<head>` del sitio anfitrión: las 6 caras se declaran íntegramente desde el CSS del bloque (`image-set()`), listo para empotrarse en otra página sin arrastrar referencias externas.
 - **Formatos modernos con fallback** — cada cara se ofrece en AVIF, WebP y JPG, y CSS `image-set()` (el equivalente de `<picture>` para fondos) hace que el navegador cargue el primer formato que soporta: AVIF → WebP → JPG.
 - **Responsiva de verdad** — el tamaño de los cubos es fluido (`clamp()` sobre el lado más corto del viewport), sin breakpoints ni saltos.
 - **Accesible** — con `prefers-reduced-motion: reduce` el 3D desaparece y el cambio de imagen es un fundido suave; el foco de teclado siempre es visible (`:focus-visible`) y los controles llevan `aria-label`.
@@ -58,7 +59,7 @@ BrowserSync sirve `dist/` con watch y live reload.
 
 1. Cada cubo calcula su posición en la cuadrícula **en CSS puro**: `sibling-index()` y `sibling-count()` dan índice y total; `sqrt()` y `round()` derivan columnas y filas; `mod()` sitúa cada cubo en su celda.
 2. Los seis radio buttons de navegación fijan las variables de rotación (`--_rx`, `--_ry`) en el bloque raíz mediante `:has()`, y los cubos las heredan y transicionan. Las variables animadas están registradas con `@property` (sintaxis tipada), requisito para poder transicionarlas.
-3. El retardo de cada cubo es su distancia Manhattan al centro por `--_wave-delay`, de modo que la rotación se propaga como una onda. El punto móvil de la navegación dura exactamente lo mismo que el barrido completo gracias a la variable compartida `--_wave-max`.
+3. El retardo de cada cubo es su distancia Manhattan al centro por `--_wave-delay`, de modo que la rotación se propaga como una onda. El aro que marca la cara activa (`__active-indicator`) dura exactamente lo mismo que el barrido completo gracias a la variable compartida `--_wave-max`.
 4. El CSS repetitivo (estados de navegación, keyframes, caras) no se escribe a mano: se genera con bucles `@each`/`@for` de Sass a partir de los mapas de `_variables.scss`.
 
 ## 🎛️ Personalización
@@ -67,7 +68,7 @@ Todos los mandos están en `src/scss/abstracts/_variables.scss` y en las variabl
 
 | Ajuste | Dónde | Efecto |
 | --- | --- | --- |
-| `$face-images` | `_variables.scss` | Rutas **base** (sin extensión) de las 6 caras, en `src/img/` (idealmente cuadradas, 600×600 o más). De cada una debe existir `.avif`, `.webp` y `.jpg`. ⚠️ Duplicadas en los `<link rel="preload">` de `src/index.html` (allí `.avif`) — actualizar ambos sitios |
+| `$face-images` | `_variables.scss` | Rutas **base** (sin extensión) de las 6 caras, en `src/img/` (idealmente cuadradas, 600×600 o más). De cada una debe existir `.avif`, `.webp` y `.jpg`. Es la única fuente de las rutas — no hay nada que sincronizar en el HTML |
 | `$face-formats` | `_variables.scss` | Formatos servidos por `image-set()`, en orden de preferencia (AVIF → WebP → JPG) |
 | `$cube-easing` | `_variables.scss` | Curva de easing de la rotación |
 | `$cube-count` | `_variables.scss` | Número de cubos — debe coincidir con los `<div>` del HTML |
@@ -80,6 +81,7 @@ Para desactivar la animación de entrada, elimina la clase `image-cube-grid-gall
 
 ## ♿ Accesibilidad
 
+- Landmark `<main>` y `<h1>` visualmente oculto (`.visually-hidden`): dan estructura, encabezado y outline al documento sin alterar el diseño sin texto.
 - `prefers-reduced-motion: reduce` desactiva la rotación 3D, el empuje en Z y la intro; el cambio de cara pasa a ser un crossfade de opacidad entre caras planas.
 - Navegación completa por teclado con indicador de foco `:focus-visible`; los radios llevan `aria-label` descriptivo.
 - Sin soporte CSS suficiente, se muestra un mensaje explicativo en lugar de una galería rota.
