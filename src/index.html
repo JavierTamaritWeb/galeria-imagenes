@@ -13,26 +13,14 @@
 
     <title>Galería de Imágenes — Grid de Cubos 3D (CSS only)</title>
 
-    <!-- Precarga de las imágenes de las 6 caras ANTES de la hoja de estilos:
-         así el preload scanner las descubre pronto y las descarga en paralelo
-         con el CSS, evitando cubos vacíos al rotar por primera vez. Deben
-         coincidir con el mapa $face-images de _variables.scss (allí con ../ y
-         sin extensión, porque las rutas son relativas al CSS compilado y el
-         formato lo elige image-set()). Se precarga solo el AVIF con su type:
-         los navegadores que no lo soporten se saltan el preload y cargan el
-         WebP/JPG por la vía normal de image-set(). -->
-    <link rel="preload" as="image" href="img/face-1.avif" type="image/avif">
-    <link rel="preload" as="image" href="img/face-2.avif" type="image/avif">
-    <link rel="preload" as="image" href="img/face-3.avif" type="image/avif">
-    <link rel="preload" as="image" href="img/face-4.avif" type="image/avif">
-    <link rel="preload" as="image" href="img/face-5.avif" type="image/avif">
-    <link rel="preload" as="image" href="img/face-6.avif" type="image/avif">
-
-    <!-- Hoja de estilos: recurso que bloquea el render. -->
+    <!-- Hoja de estilos: recurso que bloquea el render y, a la vez, la única
+         fuente de carga de las imágenes. El componente es autocontenido: las 6
+         caras se declaran con image-set() en el background-image y se descargan
+         al aplicarse el CSS. No se precargan desde aquí a propósito — 6 <link
+         rel="preload"> acoplarían el <head> del sitio anfitrión a los nombres
+         de archivo internos del componente. Si una página quisiera el arranque
+         temprano, es decisión suya añadir el preload o una cabecera HTTP Link:. -->
     <link rel="stylesheet" href="css/main.css">
-
-    <!-- Favicon SVG inline: baja prioridad, va al final del <head>. -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A7%8A</text></svg>">
 </head>
 <body>
 

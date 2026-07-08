@@ -4,6 +4,19 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.3] - 2026-07-08
+
+### Cambiado
+- El componente pasa a ser **autocontenido**: se eliminan los 6
+  `<link rel="preload">` de las caras del `<head>`. Las imágenes ya se declaran
+  con `image-set()` en el CSS (única fuente de carga), así que dejan de acoplar
+  el `<head>` del sitio anfitrión a los nombres de archivo internos. Un sitio
+  que quiera el arranque temprano puede añadir su propio preload o cabecera
+  HTTP `Link:`.
+
+### Eliminado
+- Favicon SVG inline del `<head>` (no necesario de momento).
+
 ## [1.1.2] - 2026-07-08
 
 ### Añadido
