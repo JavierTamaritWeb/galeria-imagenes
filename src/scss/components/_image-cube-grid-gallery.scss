@@ -112,7 +112,7 @@
 
         transition-property: --_nav-index;
         transition-duration: var(--_dot-total-transition-duration);
-        transition-timing-function: ease-in-out;
+        transition-timing-function: #{v.$nav-dot-easing};
     }
 
     // -----------------------------------------------------------------------

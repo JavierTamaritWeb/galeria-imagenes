@@ -4,6 +4,16 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.5] - 2026-07-08
+
+### Cambiado
+- Movimiento del aro de navegación (`__moving-dot`) más fluido y elegante:
+  nuevo easing `cubic-bezier(.22, 1, .36, 1)` (quint ease-out) en vez del
+  `ease-in-out` genérico — arranque decidido y asentamiento suave al llegar
+  a la cara seleccionada. Nueva variable `$nav-dot-easing` en
+  `_variables.scss`. La duración no cambia: sigue sincronizada con el
+  barrido radial de los cubos.
+
 ## [1.1.4] - 2026-07-08
 
 ### Cambiado
