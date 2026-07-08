@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- charset y viewport primero: el navegador debe conocer la
+         codificación y el ancho antes de procesar el resto del <head>. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galería de Imágenes — Grid de Cubos 3D (CSS only)</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A7%8A</text></svg>">
-    <link rel="stylesheet" href="css/main.css">
 
-    <!-- Precarga de las imágenes de las 6 caras: evita cubos vacíos la
-         primera vez que se rota a una cara. Deben coincidir con el mapa
-         $face-images de src/scss/abstracts/_variables.scss (allí con ../ y
+    <title>Galería de Imágenes — Grid de Cubos 3D (CSS only)</title>
+
+    <!-- Precarga de las imágenes de las 6 caras ANTES de la hoja de estilos:
+         así el preload scanner las descubre pronto y las descarga en paralelo
+         con el CSS, evitando cubos vacíos al rotar por primera vez. Deben
+         coincidir con el mapa $face-images de _variables.scss (allí con ../ y
          sin extensión, porque las rutas son relativas al CSS compilado y el
-         formato lo elige image-set()). Aquí se precarga solo el AVIF con su
-         type: los navegadores que no lo soporten se saltan el preload y
-         cargan el WebP/JPG por la vía normal de image-set(). -->
+         formato lo elige image-set()). Se precarga solo el AVIF con su type:
+         los navegadores que no lo soporten se saltan el preload y cargan el
+         WebP/JPG por la vía normal de image-set(). -->
     <link rel="preload" as="image" href="img/face-1.avif" type="image/avif">
     <link rel="preload" as="image" href="img/face-2.avif" type="image/avif">
     <link rel="preload" as="image" href="img/face-3.avif" type="image/avif">
     <link rel="preload" as="image" href="img/face-4.avif" type="image/avif">
     <link rel="preload" as="image" href="img/face-5.avif" type="image/avif">
     <link rel="preload" as="image" href="img/face-6.avif" type="image/avif">
+
+    <!-- Hoja de estilos: recurso que bloquea el render. -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Favicon SVG inline: baja prioridad, va al final del <head>. -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A7%8A</text></svg>">
 </head>
 <body>
 

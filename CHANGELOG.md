@@ -4,6 +4,15 @@ Todos los cambios notables de este proyecto se documentan aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/)
 y el versionado sigue [SemVer](https://semver.org/lang/es/).
 
+## [1.1.1] - 2026-07-08
+
+### Cambiado
+- Reordenado el `<head>` por prioridad de recursos: los `<link rel="preload">`
+  de las caras AVIF pasan **antes** de la hoja de estilos, para que el preload
+  scanner los descubra y descargue en paralelo con el CSS (antes esperaban a
+  que el CSS se parseara y aplicara `image-set()`). El favicon SVG baja al
+  final del `<head>` por ser de baja prioridad.
+
 ## [1.1.0] - 2026-07-08
 
 ### Añadido
